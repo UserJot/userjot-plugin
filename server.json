@@ -2,13 +2,13 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "com.userjot/userjot",
   "title": "UserJot",
-  "description": "Feedback boards, roadmap, changelog, support conversations and help center for a UserJot workspace.",
+  "description": "Answer support conversations, write help articles, triage feature requests, and publish changelogs.",
   "websiteUrl": "https://userjot.com/mcp",
   "repository": {
     "url": "https://github.com/UserJot/userjot-plugin",
     "source": "github"
   },
-  "version": "1.0.0",
+  "version": "1.0.1",
   "remotes": [
     {
       "type": "streamable-http",
