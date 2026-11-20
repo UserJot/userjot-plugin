@@ -94,6 +94,7 @@ The server receives the tool calls your assistant makes and the arguments you or
 - `.claude-plugin/`, `.mcp.json` and `skills/`: the Claude Code plugin.
 - `plugin.json` and `mcp.json`: the ChatGPT plugin package.
 - `server.json`: the entry in the [MCP registry](https://registry.modelcontextprotocol.io), published as `com.userjot/userjot`.
+- `llms-install.md`: setup steps an agent such as Cline follows to add the server.
 
 The server itself is part of UserJot and is not in this repo.
 
