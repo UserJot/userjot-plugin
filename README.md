@@ -1,49 +1,106 @@
-# UserJot plugin for Claude
+# UserJot MCP server and plugin
 
-[UserJot](https://userjot.com) is a feedback board, roadmap, changelog, support inbox and help center for SaaS teams. This plugin connects Claude to your UserJot workspace and teaches it to install the UserJot widget in your app.
+[UserJot](https://userjot.com) is customer support, a help center, feedback boards, a roadmap and a changelog for SaaS teams. Its MCP server lets an AI assistant work in your UserJot workspace: answer support conversations, write help articles, triage feature requests, and publish changelog entries.
 
-## What it adds
+It is one remote server with nothing to install locally:
 
-- **The UserJot MCP server.** Claude can read and change your workspace: list and triage feature requests, merge duplicates, change statuses, reply to comments, draft and publish changelog entries, answer support conversations, and write help articles.
-- **A setup skill.** `/userjot:set-up-userjot` installs the widget in the app you have open, identifies your signed-in users, and adds Feedback, What's new and Help links to your own menus.
+```
+https://api.userjot.com/v1/mcp
+```
+
+Sign in with your UserJot account, pick a workspace, and click Allow. There is no token to copy. The API and the MCP server are included on every plan, Free included.
+
+## What you can ask
+
+- "Which support conversations are waiting on us? Draft a reply to each."
+- "Search our help center for how to export data. If nothing covers it, draft an article."
+- "What are the ten most requested features this month, and which look like duplicates?"
+- "Mark the dark mode request as completed and draft a changelog entry for it."
+
+## What it covers
+
+The server has 98 tools for one workspace:
+
+- **Support conversations.** List the conversations waiting on your team, read the full timeline, reply to customers, leave internal notes, assign, resolve and reopen.
+- **Help center.** Search, write, edit, organize, publish and unpublish articles and collections.
+- **Feedback and feature requests.** Search by board, status, tag or author, see who voted, find similar posts, merge duplicates, comment, and change a request's status on the public roadmap.
+- **Changelog.** Draft, edit, schedule and publish entries, and link each one to the requests it shipped.
+- **Customers and companies.** Look up, list, sync and update the people and companies behind the feedback.
+
+Tools that only read are marked read-only, and tools that create, change or delete are marked as writes, so your client can ask before it runs one.
 
 ## Install
 
-In Claude Code:
+### VS Code with GitHub Copilot
+
+In UserJot, open `Settings` → `MCP & API` → `More` → `VS Code` and click **Add to VS Code**. Or add the server to `.vscode/mcp.json` yourself:
+
+```json
+{
+  "servers": {
+    "userjot": {
+      "type": "http",
+      "url": "https://api.userjot.com/v1/mcp"
+    }
+  }
+}
+```
+
+### Claude Code
+
+Install the plugin, which adds the server and two skills:
 
 ```
 /plugin marketplace add UserJot/userjot-plugin
 /plugin install userjot@userjot
 ```
 
-Then run `/mcp`, choose `userjot`, and sign in. You pick a workspace and click Allow. There is no token to copy. Only owners and admins of a workspace can connect an app to it.
+Then run `/mcp`, choose `userjot`, and sign in.
 
-UserJot's API and MCP server are included on every plan, Free included.
+- `/userjot:work-the-support-inbox` goes through the conversations waiting on your team, checks your help center, and drafts replies for you to approve.
+- `/userjot:set-up-userjot` installs the UserJot widget in the app you have open, identifies your signed-in users, and adds Feedback, What's new and Help links to your own menus.
 
-## Use it
+To add the server without the skills:
 
-Ask in plain words:
+```
+claude mcp add --transport http --scope user userjot https://api.userjot.com/v1/mcp
+```
 
-- "Set up UserJot in this app."
-- "What are the ten most requested features this month?"
-- "Mark the dark mode request as completed and draft a changelog entry for it."
-- "Summarise the support conversations that are waiting on us."
+### Other clients
+
+| Client | Guide |
+| --- | --- |
+| Claude (web, desktop, mobile) | [Common setup](https://feedback.userjot.com/help/articles/mcp-common-setup) |
+| ChatGPT | [ChatGPT](https://feedback.userjot.com/help/articles/mcp-chatgpt) |
+| Cursor | [Cursor](https://feedback.userjot.com/help/articles/mcp-cursor) |
+| Codex | [Codex](https://feedback.userjot.com/help/articles/mcp-codex) |
+| Gemini CLI | [Common setup](https://feedback.userjot.com/help/articles/mcp-common-setup) |
+| Windsurf | [Windsurf](https://feedback.userjot.com/help/articles/mcp-windsurf) |
+
+Any other client that speaks remote HTTP MCP works with the server URL above. Clients that cannot sign in with OAuth can send an API token from `Settings` → `MCP & API` as `Authorization: Bearer YOUR_TOKEN`.
+
+## Who can connect, and how to disconnect
+
+Only owners and admins of a workspace can connect an app to it. Every call acts on the one workspace you chose at sign-in.
+
+Connected apps are listed in the UserJot dashboard under `Settings` → `MCP & API` → Connected apps, with the name of the person who connected each one. You can revoke any of them there.
 
 ## What it sends to UserJot
 
-The MCP server at `https://api.userjot.com/v1/mcp` receives the tool calls Claude makes and the arguments you or Claude supply, and nothing else from your machine. Every call acts on the one workspace you signed in to. Tools that only read are marked read-only; tools that create, change or delete data ask before they run.
+The server receives the tool calls your assistant makes and the arguments you or the assistant supply, and nothing else from your machine. The setup skill makes no network calls of its own. It edits files in your project.
 
-The setup skill makes no network calls of its own. It edits files in your project.
+## In this repo
 
-You can disconnect the plugin at any time from `Settings` → `MCP & API` → Connected apps in the UserJot dashboard.
+- `.claude-plugin/`, `.mcp.json` and `skills/`: the Claude Code plugin.
+- `plugin.json` and `mcp.json`: the ChatGPT plugin package.
+- `server.json`: the entry in the [MCP registry](https://registry.modelcontextprotocol.io), published as `com.userjot/userjot`.
 
-## Other clients
-
-The same server works in claude.ai, ChatGPT, Cursor, Codex and Windsurf. See the [MCP guides](https://feedback.userjot.com/help/articles/mcp-overview).
+The server itself is part of UserJot and is not in this repo.
 
 ## Links
 
-- Documentation: https://feedback.userjot.com/help
+- MCP documentation: https://feedback.userjot.com/help/articles/mcp-overview
+- Help center: https://feedback.userjot.com/help
 - Privacy policy: https://userjot.com/privacy
 - Terms: https://userjot.com/terms
 - Support: support@userjot.com
