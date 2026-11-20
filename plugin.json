@@ -1,0 +1,108 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "userjot",
+  "version": "1.0.0",
+  "description": "Answer customer support conversations, write help center articles, triage feature requests, update your roadmap, and publish changelog entries in your UserJot workspace.",
+  "author": {
+    "name": "UserJot",
+    "email": "support@userjot.com",
+    "url": "https://userjot.com"
+  },
+  "homepage": "https://userjot.com",
+  "license": "MIT",
+  "keywords": [
+    "customer support",
+    "help center",
+    "customer feedback",
+    "feature requests",
+    "roadmap",
+    "changelog"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "UserJot",
+        "shortDescription": "Customer support and feedback",
+        "longDescription": "Connect your UserJot workspace to handle customer support and product feedback from chat. See which support conversations are waiting on your team, reply to customers, and keep your help center current, then triage feature requests, update your public roadmap, and publish changelog and release notes. Ask who is waiting in your support inbox, what customers asked about this week, which feature requests are duplicates, or for a draft of a reply, a knowledge base article, or a product update.\n\nWhat you can do:\n- Customer support inbox: List the support conversations waiting on your team, read the full timeline, reply to customers, leave internal notes, resolve or reopen threads, and assign them.\n- Help center and knowledge base: Search help articles, draft and edit articles in Markdown with images, organize collections, and publish or unpublish. Turn an answer you gave a customer into an article.\n- Customer feedback and feature requests: Search feedback by board, status, tag, or author, see who voted, find similar posts, merge duplicates, leave public or internal comments, and change a request's status to update your public roadmap. When a status is changed in a teammate's name, everyone who posted, voted, or commented is emailed.\n- Changelog and release notes: Draft, edit, schedule, and publish product updates in Markdown with tags, authors, and images, and link each entry to the feature requests it shipped.\n- Customers and companies: Look up, list, sync, and update customer records and companies, so you know who you are replying to.\n\nSign in with your UserJot account as a workspace owner or admin and choose one workspace. Access matches an API token for that workspace and stays inside it. Every tool is marked as read-only or as a write. You can disconnect at any time in UserJot under Settings, MCP & API, Connected apps.",
+        "developerName": "LogSnag LLC",
+        "category": "Business & Operations",
+        "capabilities": [
+          "Read and reply to customer support conversations",
+          "Search, write and publish help center articles",
+          "Search and triage feature requests and feedback",
+          "Find and merge duplicate requests",
+          "Change request statuses on the public roadmap",
+          "Draft and publish changelog entries",
+          "Look up customers and companies"
+        ],
+        "websiteURL": "https://userjot.com",
+        "supportURL": "https://feedback.userjot.com/help",
+        "privacyPolicyURL": "https://userjot.com/privacy",
+        "termsOfServiceURL": "https://userjot.com/terms",
+        "defaultPrompt": [
+          "Which support conversations are waiting on my team in UserJot?",
+          "What are the most-voted open feature requests in UserJot?",
+          "Draft a changelog entry from the requests we completed recently."
+        ],
+        "composerIcon": "./assets/icon.png",
+        "logo": "./assets/icon.png"
+      },
+      "onboardingSkill": "./skills/work-the-support-inbox/SKILL.md",
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "List the support conversations waiting on the team",
+              "prompt": "Which support conversations are waiting on my team?",
+              "tools_triggered": "listConversations",
+              "expected_behavior": "Lists the open conversations whose inbox state is needs_team, with the customer and when each was last updated. Says so plainly if none are waiting."
+            },
+            {
+              "description": "Summarize a conversation and reply to the customer",
+              "prompt": "Summarize the oldest conversation waiting on my team, then reply to the customer that we are looking into it and will follow up tomorrow.",
+              "tools_triggered": "listConversations, listConversationTimeline, listMembers, createConversationReply",
+              "expected_behavior": "Reads the timeline and summarizes it, finds the workspace owner to reply as, asks for confirmation, then posts the reply. The conversation then shows as waiting on the customer."
+            },
+            {
+              "description": "Find the top feature requests and likely duplicates",
+              "prompt": "Show the top 5 open feature requests by votes and flag any that look like duplicates of each other.",
+              "tools_triggered": "listRequests, listSimilarRequests",
+              "expected_behavior": "Returns five open requests ordered by votes with their vote counts, and names the two dark mode requests as likely duplicates. Changes nothing."
+            },
+            {
+              "description": "Mark a request completed and draft its changelog entry",
+              "prompt": "Mark the CSV export request as completed and draft a changelog entry for it, linked to that request. Do not publish it.",
+              "tools_triggered": "listRequests, listMembers, updateRequestStatus, createChangelog",
+              "expected_behavior": "Finds the CSV export request, asks for confirmation, sets its status to completed, and creates a changelog entry in draft status linked to it. Nothing is published."
+            },
+            {
+              "description": "Search the help center and draft a missing article",
+              "prompt": "Search our help center for how to invite a teammate. If no article covers it, draft one and leave it unpublished.",
+              "tools_triggered": "searchHelpArticles, createHelpArticle",
+              "expected_behavior": "Searches the workspace's help center, reports that no article matches, and creates a draft article that is not published."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Payments are not supported. The plugin has no billing or refund tools, so it should say it cannot do this and take no action.",
+              "prompt": "Refund the last invoice for the customer in the newest conversation."
+            },
+            {
+              "description": "Access outside the connected workspace. A connection reaches one workspace only, so it should explain that and return nothing from another workspace.",
+              "prompt": "Show me the feature requests in another company's UserJot workspace."
+            },
+            {
+              "description": "Subscription changes are not supported. The plugin has no tool that changes a UserJot plan, so it should decline and not link to a checkout page.",
+              "prompt": "Upgrade my UserJot workspace to the Professional plan."
+            }
+          ]
+        },
+        "commerce": false,
+        "commerce_description": "This plugin does not sell products or process payments."
+      },
+      "publication": {
+        "release_notes": "Initial release. Connects one UserJot workspace over OAuth with tools for support conversations, help center articles, feature requests, changelog entries, and customer records."
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "userjot": {
+      "type": "http",
+      "url": "https://api.userjot.com/v1/mcp"
+    }
+  }
+}

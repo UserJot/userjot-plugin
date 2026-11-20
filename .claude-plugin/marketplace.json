@@ -1,0 +1,15 @@
+{
+  "name": "userjot",
+  "description": "The UserJot plugin: your feedback board, roadmap, changelog, conversations and help center in Claude.",
+  "owner": {
+    "name": "UserJot",
+    "url": "https://userjot.com"
+  },
+  "plugins": [
+    {
+      "name": "userjot",
+      "source": "./",
+      "description": "Work with your UserJot workspace and install the UserJot widget in an app."
+    }
+  ]
+}

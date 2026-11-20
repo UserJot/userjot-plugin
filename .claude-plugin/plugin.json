@@ -1,0 +1,17 @@
+{
+  "name": "userjot",
+  "displayName": "UserJot",
+  "version": "1.0.0",
+  "description": "Work with your UserJot feedback board, roadmap, changelog, conversations and help center, and install the UserJot widget in an app.",
+  "author": {
+    "name": "UserJot",
+    "url": "https://userjot.com"
+  },
+  "homepage": "https://userjot.com",
+  "repository": "https://github.com/UserJot/userjot-plugin",
+  "license": "MIT",
+  "documentationUrl": "https://feedback.userjot.com/help/articles/mcp-overview",
+  "supportUrl": "https://feedback.userjot.com/help",
+  "privacyPolicyUrl": "https://userjot.com/privacy",
+  "termsOfServiceUrl": "https://userjot.com/terms"
+}
